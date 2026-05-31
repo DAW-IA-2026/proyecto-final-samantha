@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid()) @db.VarChar(26)
+  alias      String    @db.VarChar(100)
+  email      String    @unique @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  role       String    @default("user") @db.VarChar(20)
+  is_active  Boolean   @default(true)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.DateTime(0)
+
+  games Game[]
+
+  @@map("users")
+}
+
+model Category {
+  id         String    @id @default(cuid()) @db.VarChar(26)
+  name       String    @unique @db.VarChar(100)
+  sort_order Int       @default(0)
+  is_active  Boolean   @default(true)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.DateTime(0)
+
+  games Game[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id         String    @id @default(cuid()) @db.VarChar(26)
+  name       String    @unique @db.VarChar(100)
+  slug       String    @unique @db.VarChar(100)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.DateTime(0)
+
+  games GameTag[]
+
+  @@map("tags")
+}
+
+model Game {
+  id                String    @id @default(cuid()) @db.VarChar(26)
+  user_id           String    @db.VarChar(26)
+  name              String    @db.VarChar(255)
+  category_id       String    @db.VarChar(26)
+  description       String?   @db.Text
+  cover_image_url   String?   @db.VarChar(500)
+  metacritic_score  Int
+  hours_to_complete Decimal   @db.Decimal(6, 2)
+  status            String    @default("pending") @db.VarChar(20)
+  completed_at      DateTime? @db.DateTime(0)
+  completion_notes  String?   @db.Text
+  completion_rating Int?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  deleted_at        DateTime? @db.DateTime(0)
+
+  user     User      @relation(fields: [user_id], references: [id])
+  category Category  @relation(fields: [category_id], references: [id])
+  tags     GameTag[]
+
+  @@map("games")
+}
+
+model GameTag {
+  game_id String @db.VarChar(26)
+  tag_id  String @db.VarChar(26)
+
+  game Game @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([game_id, tag_id])
+  @@map("game_tags")
+}

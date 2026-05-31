@@ -1,0 +1,34 @@
+{
+  "name": "please-games-are-needy-api",
+  "version": "1.0.0",
+  "description": "Backend API for Please, games are needy! - Game backlog manager",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest",
+    "db:migrate": "node scripts/migration-run.js",
+    "db:generate": "node scripts/migration-generate.js",
+    "db:seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "express-bearer-token": "^3.0.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^6.19.3",
+    "ulid": "^2.3.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "portless": "^0.13.0",
+    "supertest": "^6.3.3"
+  }
+}

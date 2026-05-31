@@ -1,0 +1,94 @@
+/* Custom styles for game backlog manager */
+
+body {
+  background-color: #0D0D0F;
+  color: #E0E0E0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1A1A1F;
+}
+::-webkit-scrollbar-thumb {
+  background: #2E2E36;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #39FF14;
+}
+
+/* Card hover glow effect */
+.card-glow:hover {
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.15);
+  border-color: rgba(57, 255, 20, 0.3);
+}
+
+/* Neon button styles */
+.btn-primary {
+  @apply px-6 py-3 rounded-lg font-pixel transition-all duration-300;
+  background: linear-gradient(135deg, #39FF14 0%, #2dd10f 100%);
+  color: #0D0D0F;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-lg font-pixel transition-all duration-300 border-2;
+  border-color: #BF00FF;
+  color: #BF00FF;
+  background: transparent;
+}
+.btn-secondary:hover {
+  background: rgba(191, 0, 255, 0.1);
+  box-shadow: 0 0 20px rgba(191, 0, 255, 0.3);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(26, 26, 31, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Priority badge */
+.priority-high {
+  color: #39FF14;
+}
+.priority-mid {
+  color: #fbbf24;
+}
+.priority-low {
+  color: #f87171;
+}
+
+/* Input styling */
+.input-dark {
+  @apply w-full px-4 py-3 rounded-lg bg-dark-surface border border-dark-border text-white placeholder-gray-500 focus:outline-none transition-all;
+}
+.input-dark:focus {
+  border-color: #39FF14;
+  box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.1);
+}
+
+/* Pixel text decoration */
+.pixel-text {
+  font-family: 'Pixelify Sans', cursive;
+  letter-spacing: 0.02em;
+}
+
+/* Status badges */
+.status-pending {
+  @apply px-2 py-1 rounded text-xs font-medium;
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+.status-completed {
+  @apply px-2 py-1 rounded text-xs font-medium;
+  background: rgba(57, 255, 20, 0.15);
+  color: #39FF14;
+}
