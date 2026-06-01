@@ -54,6 +54,12 @@ export const useGameStore = defineStore('games', {
       return await $api(`/games/${id}/complete`, { method: 'PATCH', body })
     },
 
+    async searchExternalGames(query) {
+      const { $api } = useNuxtApp()
+      const res = await $api('/games/ext-finder', { params: { q: query } })
+      return res.data
+    },
+
     async fetchGame(id) {
       this.loading = true
       try {

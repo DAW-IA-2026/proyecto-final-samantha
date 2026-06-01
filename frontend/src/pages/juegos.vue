@@ -13,7 +13,7 @@
 
     <!-- Filters -->
     <div class="glass rounded-xl p-4 mb-8 space-y-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <input
           v-model="filters.search"
           type="text"
@@ -30,6 +30,12 @@
           <option value="">All categories</option>
           <option v-for="cat in gameStore.categories" :key="cat.id" :value="cat.id">
             {{ cat.name }}
+          </option>
+        </select>
+        <select v-model="filters.tag" class="input-dark" @change="applyFilters">
+          <option value="">All tags</option>
+          <option v-for="tag in gameStore.tags" :key="tag.id" :value="tag.slug">
+            {{ tag.name }}
           </option>
         </select>
         <select v-model="filters.sort" class="input-dark" @change="applyFilters">
@@ -81,6 +87,7 @@ const filters = reactive({
   search: '',
   status: '',
   category_id: '',
+  tag: '',
   sort: 'priority'
 })
 
@@ -92,6 +99,7 @@ const applyFilters = () => {
   }
   if (filters.status) params.status = filters.status
   if (filters.category_id) params.category_id = filters.category_id
+  if (filters.tag) params.tag = filters.tag
   if (filters.search) params.search = filters.search
 
   gameStore.fetchGames(params)
@@ -117,5 +125,6 @@ const handleDelete = async (id) => {
 onMounted(() => {
   applyFilters()
   gameStore.fetchCategories()
+  gameStore.fetchTags()
 })
 </script>

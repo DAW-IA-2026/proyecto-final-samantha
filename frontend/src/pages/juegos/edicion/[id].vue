@@ -65,6 +65,11 @@
         <textarea v-model="form.description" class="input-dark h-24 resize-none" />
       </div>
 
+      <!-- Error display -->
+      <div v-if="errorMessage" class="p-4 rounded-lg bg-red-400/10 border border-red-400/30 text-red-400 text-sm">
+        {{ errorMessage }}
+      </div>
+
       <div class="flex items-center gap-4 pt-4">
         <button type="submit" class="btn-primary flex-1" :disabled="saving">
           {{ saving ? 'Saving...' : 'Save Changes' }}
@@ -89,6 +94,7 @@ const gameStore = useGameStore()
 
 const loading = ref(true)
 const saving = ref(false)
+const errorMessage = ref('')
 const gameId = route.params.id
 
 const form = reactive({
@@ -111,8 +117,9 @@ const toggleTag = (id) => {
 }
 
 const handleSubmit = async () => {
+  errorMessage.value = ''
   if (form.metacritic_score === null || form.hours_to_complete === null) {
-    alert('Please fill in Metacritic Score and Hours to Complete')
+    errorMessage.value = 'Please fill in Metacritic Score and Hours to Complete'
     return
   }
   saving.value = true
@@ -120,17 +127,15 @@ const handleSubmit = async () => {
     await gameStore.updateGame(gameId, form)
     router.push('/juegos')
   } catch (e) {
-    alert('Error updating game: ' + (e.message || 'Unknown error'))
-  } finally {
-    saving.value = false
-  }
-}
-  saving.value = true
-  try {
-    await gameStore.updateGame(gameId, form)
-    router.push('/juegos')
-  } catch (e) {
-    alert('Error updating game: ' + (e.message || 'Unknown error'))
+    const backend = e?.response?._data
+    if (backend?.message) {
+      errorMessage.value = backend.message
+      if (backend.errors?.length) {
+        errorMessage.value += ': ' + backend.errors.map(err => err.message).join(', ')
+      }
+    } else {
+      errorMessage.value = 'Error updating game: ' + (e.message || 'Unknown error')
+    }
   } finally {
     saving.value = false
   }

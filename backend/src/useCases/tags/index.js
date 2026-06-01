@@ -23,8 +23,10 @@ export const createTag = async (req) => {
   if (errors) throw new ValidationError(errors)
 
   const slug = slugify(req.body.name)
-  const existing = await tagRepository.findBySlug?.(slug)
-  // We'll check in controller or handle gracefully
+  const existing = await tagRepository.findBySlug(slug)
+  if (existing) {
+    throw new ConflictError('Tag with this slug already exists')
+  }
 
   const tag = await tagRepository.create({
     name: req.body.name,

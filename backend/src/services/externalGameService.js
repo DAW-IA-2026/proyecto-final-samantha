@@ -1,20 +1,54 @@
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-const { HowLongToBeatService } = require('howlongtobeat')
 import { chromium } from 'playwright'
 
-const hltb = new HowLongToBeatService()
+const HLTB_URL = 'https://howlongtobeat.com'
 
-const hltbTimeToHours = (timeStr) => {
-  if (!timeStr || timeStr === '--') return null
-  const hours = parseFloat(timeStr)
-  return isNaN(hours) ? null : hours
+const hltbTimeToHours = (seconds) => {
+  if (!seconds || seconds <= 0) return null
+  return Number((seconds / 3600).toFixed(1))
+}
+
+const searchHLTB = async (query) => {
+  const browser = await chromium.launch({ headless: true })
+  const context = await browser.newContext({
+    userAgent:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+  })
+  const page = await context.newPage()
+
+  try {
+    // Intercept the internal HLTB search API call
+    const searchApiPromise = page.waitForResponse(
+      (resp) => resp.url().includes('/api/search') && resp.request().method() === 'POST',
+      { timeout: 15000 }
+    )
+
+    await page.goto(`${HLTB_URL}/?q=${encodeURIComponent(query)}`, {
+      waitUntil: 'domcontentloaded',
+      timeout: 20000
+    })
+
+    const response = await searchApiPromise
+    const payload = await response.json()
+
+    const list = payload?.data || payload?.results || []
+    return list.slice(0, 5).map((item) => ({
+      name: item.game_name || item.gameName || item.title || '',
+      imageUrl: item.game_image || item.image || null,
+      gameplayMainSeconds: item.comp_main || item.main_story || null
+    }))
+  } catch (err) {
+    console.warn(`HLTB search failed for "${query}":`, err.message)
+    return []
+  } finally {
+    await browser.close()
+  }
 }
 
 const metacriticSearch = async (gameName) => {
   const browser = await chromium.launch({ headless: true })
   const context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    userAgent:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
   })
   const page = await context.newPage()
 
@@ -42,7 +76,9 @@ const metacriticSearch = async (gameName) => {
     }
 
     // Cover image — OG image or first image in hero
-    const ogImage = await page.$eval('meta[property="og:image"]', el => el.content).catch(() => null)
+    const ogImage = await page
+      .$eval('meta[property="og:image"]', (el) => el.content)
+      .catch(() => null)
     image = ogImage
 
     return { score, description, image }
@@ -56,20 +92,19 @@ const metacriticSearch = async (gameName) => {
 
 export const searchExternalGames = async (query) => {
   try {
-    const hltbResults = await hltb.search(query)
+    const hltbResults = await searchHLTB(query)
     if (!hltbResults || hltbResults.length === 0) return []
 
-    const topResults = hltbResults.slice(0, 5)
     const enriched = []
 
-    for (const game of topResults) {
+    for (const game of hltbResults) {
       const meta = await metacriticSearch(game.name)
 
       enriched.push({
         name: game.name,
         description: meta.description || '',
         metacritic_score: meta.score,
-        hours_to_complete: hltbTimeToHours(game.gameplayMain),
+        hours_to_complete: hltbTimeToHours(game.gameplayMainSeconds),
         cover_image_url: meta.image || game.imageUrl || null,
         source_name: 'hltb+metacritic'
       })

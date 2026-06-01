@@ -33,6 +33,18 @@ export const tagRepository = {
     })
   },
 
+  async findBySlug(slug) {
+    return prisma.tag.findFirst({
+      where: { slug, deleted_at: null }
+    })
+  },
+
+  async findBySlug(slug) {
+    return prisma.tag.findFirst({
+      where: { slug, deleted_at: null }
+    })
+  },
+
   async create(data) {
     return prisma.tag.create({ data })
   },

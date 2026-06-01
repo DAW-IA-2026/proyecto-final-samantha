@@ -29,7 +29,7 @@ export const categoryRepository = {
 
   async findById(id) {
     return prisma.category.findFirst({
-      where: { id, deleted_at: null }
+      where: { id, deleted_at: null, is_active: true }
     })
   },
 

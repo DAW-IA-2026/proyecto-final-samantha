@@ -7,6 +7,54 @@
       <h1 class="font-pixel text-3xl text-white mt-4">Add New Game</h1>
     </div>
 
+    <!-- External Search -->
+    <div class="glass rounded-xl p-6 mb-6 space-y-4">
+      <label class="block text-sm font-medium text-gray-300">Find game data automatically</label>
+      <div class="flex gap-3">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="input-dark flex-1"
+          placeholder="e.g. Hades"
+          @keyup.enter="runSearch"
+        />
+        <button
+          type="button"
+          class="px-4 py-3 rounded-lg font-medium text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all whitespace-nowrap"
+          :disabled="searching"
+          @click="runSearch"
+        >
+          {{ searching ? 'Searching...' : 'Search' }}
+        </button>
+      </div>
+
+      <!-- Search Results -->
+      <div v-if="searchResults.length" class="space-y-3 mt-4">
+        <p class="text-sm text-gray-400">Select a result to auto-fill the form:</p>
+        <div
+          v-for="result in searchResults"
+          :key="result.name"
+          class="flex items-center gap-4 p-3 rounded-lg bg-dark-bg/50 border border-dark-border hover:border-neon-green/50 cursor-pointer transition-all"
+          @click="applyResult(result)"
+        >
+          <img
+            v-if="result.cover_image_url"
+            :src="result.cover_image_url"
+            class="w-12 h-16 object-cover rounded"
+          />
+          <div v-else class="w-12 h-16 rounded bg-dark-surface flex items-center justify-center text-xl">🎮</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-medium text-white truncate">{{ result.name }}</p>
+            <p class="text-xs text-gray-400">
+              Score: {{ result.metacritic_score ?? 'N/A' }} | Hours: {{ result.hours_to_complete ?? 'N/A' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <p v-if="searchError" class="text-sm text-red-400">{{ searchError }}</p>
+    </div>
+
     <form class="glass rounded-xl p-6 sm:p-8 space-y-6" @submit.prevent="handleSubmit">
       <div>
         <label class="block text-sm font-medium text-gray-300 mb-2">Game Name</label>
@@ -61,6 +109,11 @@
         <textarea v-model="form.description" class="input-dark h-24 resize-none" placeholder="Personal notes about the game..." />
       </div>
 
+      <!-- Error display -->
+      <div v-if="errorMessage" class="p-4 rounded-lg bg-red-400/10 border border-red-400/30 text-red-400 text-sm">
+        {{ errorMessage }}
+      </div>
+
       <div class="flex items-center gap-4 pt-4">
         <button type="submit" class="btn-primary flex-1" :disabled="saving">
           {{ saving ? 'Creating...' : 'Create Game' }}
@@ -82,6 +135,12 @@ definePageMeta({ middleware: 'auth' })
 const gameStore = useGameStore()
 const router = useRouter()
 const saving = ref(false)
+const errorMessage = ref('')
+
+const searchQuery = ref('')
+const searchResults = ref([])
+const searching = ref(false)
+const searchError = ref('')
 
 const form = reactive({
   name: '',
@@ -102,9 +161,35 @@ const toggleTag = (id) => {
   }
 }
 
+const runSearch = async () => {
+  if (!searchQuery.value.trim()) return
+  searching.value = true
+  searchResults.value = []
+  searchError.value = ''
+  try {
+    const results = await gameStore.searchExternalGames(searchQuery.value.trim())
+    searchResults.value = results
+    if (!results.length) searchError.value = 'No games found. Try another name.'
+  } catch (e) {
+    searchError.value = 'Search service unavailable. Try again later.'
+  } finally {
+    searching.value = false
+  }
+}
+
+const applyResult = (result) => {
+  form.name = result.name || ''
+  form.metacritic_score = result.metacritic_score ?? null
+  form.hours_to_complete = result.hours_to_complete ?? null
+  form.cover_image_url = result.cover_image_url || ''
+  form.description = result.description || ''
+  searchResults.value = []
+}
+
 const handleSubmit = async () => {
+  errorMessage.value = ''
   if (form.metacritic_score === null || form.hours_to_complete === null) {
-    alert('Please fill in Metacritic Score and Hours to Complete')
+    errorMessage.value = 'Please fill in Metacritic Score and Hours to Complete'
     return
   }
   saving.value = true
@@ -112,17 +197,15 @@ const handleSubmit = async () => {
     await gameStore.createGame(form)
     router.push('/juegos')
   } catch (e) {
-    alert('Error creating game: ' + (e.message || 'Unknown error'))
-  } finally {
-    saving.value = false
-  }
-}
-  saving.value = true
-  try {
-    await gameStore.createGame(form)
-    router.push('/juegos')
-  } catch (e) {
-    alert('Error creating game: ' + (e.message || 'Unknown error'))
+    const backend = e?.response?._data
+    if (backend?.message) {
+      errorMessage.value = backend.message
+      if (backend.errors?.length) {
+        errorMessage.value += ': ' + backend.errors.map(err => err.message).join(', ')
+      }
+    } else {
+      errorMessage.value = 'Error creating game: ' + (e.message || 'Unknown error')
+    }
   } finally {
     saving.value = false
   }
