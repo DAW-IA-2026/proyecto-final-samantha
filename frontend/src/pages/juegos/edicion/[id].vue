@@ -111,6 +111,20 @@ const toggleTag = (id) => {
 }
 
 const handleSubmit = async () => {
+  if (form.metacritic_score === null || form.hours_to_complete === null) {
+    alert('Please fill in Metacritic Score and Hours to Complete')
+    return
+  }
+  saving.value = true
+  try {
+    await gameStore.updateGame(gameId, form)
+    router.push('/juegos')
+  } catch (e) {
+    alert('Error updating game: ' + (e.message || 'Unknown error'))
+  } finally {
+    saving.value = false
+  }
+}
   saving.value = true
   try {
     await gameStore.updateGame(gameId, form)

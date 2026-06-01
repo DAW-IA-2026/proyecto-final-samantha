@@ -80,24 +80,6 @@
           :to="`/juegos/edicion/${game.id}`"
           class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
         >
-          View
-        </NuxtLink>
-        <NuxtLink
-          :to="`/juegos/edicion/${game.id}`"
-          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
-        >
-          View
-        </NuxtLink>
-        <NuxtLink
-          :to="`/juegos/edicion/${game.id}`"
-          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
-        >
-          View
-        </NuxtLink>
-        <NuxtLink
-          :to="`/juegos/edicion/${game.id}`"
-          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
-        >
           Edit
         </NuxtLink>
         <button

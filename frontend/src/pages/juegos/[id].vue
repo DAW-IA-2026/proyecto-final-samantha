@@ -51,7 +51,7 @@
                 <div class="text-xs text-gray-400 mt-1">Hours</div>
               </div>
               <div class="glass rounded-lg p-3 text-center">
-                <div class="text-2xl font-bold text-neon-green">{{ game.priority_score }}</div>
+                <div class="text-2xl font-bold text-neon-green">{{ game.priority_score ?? 'N/A' }}</div>
                 <div class="text-xs text-gray-400 mt-1">Priority</div>
               </div>
               <div class="glass rounded-lg p-3 text-center">
