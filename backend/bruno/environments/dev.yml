@@ -1,0 +1,20 @@
+name: dev
+variables:
+  - name: URL
+    value: http://localhost:3001
+  - name: TOKEN
+    value: ""
+  - name: GAME_ID
+    value: ""
+  - name: CATEGORY_ID
+    value: ""
+  - name: QUERY
+    value: ""
+  - name: GAME_NAME
+    value: ""
+  - name: GAME_DESCRIPTION
+    value: ""
+  - name: METACRITIC_SCORE
+    value: ""
+  - name: HOURS_TO_COMPLETE
+    value: ""

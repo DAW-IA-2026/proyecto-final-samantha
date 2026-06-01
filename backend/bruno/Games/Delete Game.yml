@@ -1,0 +1,17 @@
+info:
+  name: Delete Game
+  type: http
+  seq: 6
+
+http:
+  method: DELETE
+  url: "{{URL}}/games/{{GAME_ID}}"
+  auth:
+    type: bearer
+    bearer: "{{TOKEN}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

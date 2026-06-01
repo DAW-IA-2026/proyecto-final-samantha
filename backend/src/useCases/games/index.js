@@ -59,6 +59,16 @@ export const updateGame = async (req) => {
   return { data: game }
 }
 
+export const deleteGame = async (req) => {
+  const { id } = req.params
+  const userId = req.userSession.id
+
+  const existing = await gameRepository.findById(id, userId)
+  if (!existing) throw new NotFoundError('Game')
+
+  const game = await gameRepository.delete(id)
+  return { data: game }
+}
 
 export const completeGame = async (req) => {
   const { id } = req.params
@@ -78,4 +88,3 @@ export const completeGame = async (req) => {
 
   return { data: game }
 }
-

@@ -1,17 +1,18 @@
-export const getMe = async (req, res, next) => {
+import { getMe, updateMe } from '../../useCases/users/index.js'
+import { userTransformer } from '../../transformers/users/userTransformer.js'
+
+export const getMeCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/users/index.js')).getMe(req)
-    const { userTransformer } = await import('../../transformers/users/userTransformer.js')
+    const { data } = await getMe(req)
     res.json({ data: userTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const updateMe = async (req, res, next) => {
+export const updateMeCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/users/index.js')).updateMe(req)
-    const { userTransformer } = await import('../../transformers/users/userTransformer.js')
+    const { data } = await updateMe(req)
     res.json({ data: userTransformer(data) })
   } catch (error) {
     next(error)

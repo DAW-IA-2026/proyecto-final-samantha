@@ -52,6 +52,17 @@ export const useGameStore = defineStore('games', {
     async completeGame(id, body) {
       const { $api } = useNuxtApp()
       return await $api(`/games/${id}/complete`, { method: 'PATCH', body })
+    },
+
+    async fetchGame(id) {
+      this.loading = true
+      try {
+        const { $api } = useNuxtApp()
+        const res = await $api(`/games/${id}`)
+        return res.data
+      } finally {
+        this.loading = false
+      }
     }
   }
 })

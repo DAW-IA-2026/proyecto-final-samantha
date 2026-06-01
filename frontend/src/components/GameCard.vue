@@ -71,6 +71,30 @@
       <!-- Actions -->
       <div class="flex items-center gap-2 mt-4 pt-4 border-t border-white/5">
         <NuxtLink
+          :to="`/juegos/${game.id}`"
+          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-white border border-white/10 hover:bg-white/5 transition-all"
+        >
+          View
+        </NuxtLink>
+        <NuxtLink
+          :to="`/juegos/edicion/${game.id}`"
+          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
+        >
+          View
+        </NuxtLink>
+        <NuxtLink
+          :to="`/juegos/edicion/${game.id}`"
+          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
+        >
+          View
+        </NuxtLink>
+        <NuxtLink
+          :to="`/juegos/edicion/${game.id}`"
+          class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
+        >
+          View
+        </NuxtLink>
+        <NuxtLink
           :to="`/juegos/edicion/${game.id}`"
           class="flex-1 px-3 py-2 rounded-lg text-sm font-medium text-center text-neon-purple border border-neon-purple/30 hover:bg-neon-purple/10 transition-all"
         >

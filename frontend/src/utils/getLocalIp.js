@@ -1,6 +1,13 @@
 import { networkInterfaces } from 'os'
 
 export function getLocalIp() {
+  // Priority 1: explicit env var for known local network
+  const envIp = process.env.NUXT_PUBLIC_LOCAL_IP
+  if (envIp && envIp.trim().length > 0) {
+    return envIp.trim()
+  }
+
+  // Priority 2: auto-detect from network interfaces
   const interfaces = networkInterfaces()
   let fallback = null
 

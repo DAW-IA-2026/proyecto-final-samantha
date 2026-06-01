@@ -1,0 +1,23 @@
+info:
+  name: Update Game
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: "{{URL}}/games/{{GAME_ID}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "{{GAME_NAME}}"
+      }
+  auth:
+    type: bearer
+    bearer: "{{TOKEN}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

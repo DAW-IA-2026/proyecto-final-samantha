@@ -9,11 +9,11 @@
         <div class="flex items-center space-x-6 text-sm text-gray-500">
           <span>Made with</span>
           <span class="text-neon-purple">♥</span>
-          <span>and pixels</span>
+          <span>and lack of dopamine</span>
         </div>
       </div>
       <div class="mt-6 pt-6 border-t border-white/5 text-center text-xs text-gray-600">
-        © 2024 Please, games are needy! All rights reserved.
+        Samantha NG © 2026 Please, games are needy! All rights reserved.
       </div>
     </div>
   </footer>

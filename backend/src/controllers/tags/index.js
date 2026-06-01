@@ -1,55 +1,45 @@
-export const listTags = async (req, res, next) => {
-  try {
-    const { data, meta } = await (await import('../../useCases/tags/index.js')).listTags()
-    const { tagTransformer } = await import('../../transformers/tags/tagTransformer.js')
+import { listTags, getTag, createTag, updateTag, deleteTag } from '../../useCases/tags/index.js'
+import { tagTransformer } from '../../transformers/tags/tagTransformer.js'
 
-    res.json({
-      data: data.map(tagTransformer),
-      meta
-    })
+export const listTagsCtrl = async (req, res, next) => {
+  try {
+    const { data, meta } = await listTags()
+    res.json({ data: data.map(tagTransformer), meta })
   } catch (error) {
     next(error)
   }
 }
 
-export const getTag = async (req, res, next) => {
+export const getTagCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/tags/index.js')).getTag(req)
-    const { tagTransformer } = await import('../../transformers/tags/tagTransformer.js')
-
+    const { data } = await getTag(req)
     res.json({ data: tagTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const createTag = async (req, res, next) => {
+export const createTagCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/tags/index.js')).createTag(req)
-    const { tagTransformer } = await import('../../transformers/tags/tagTransformer.js')
-
+    const { data } = await createTag(req)
     res.status(201).json({ data: tagTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const updateTag = async (req, res, next) => {
+export const updateTagCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/tags/index.js')).updateTag(req)
-    const { tagTransformer } = await import('../../transformers/tags/tagTransformer.js')
-
+    const { data } = await updateTag(req)
     res.json({ data: tagTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const deleteTag = async (req, res, next) => {
+export const deleteTagCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/tags/index.js')).deleteTag(req)
-    const { tagTransformer } = await import('../../transformers/tags/tagTransformer.js')
-
+    const { data } = await deleteTag(req)
     res.json({ data: tagTransformer(data) })
   } catch (error) {
     next(error)

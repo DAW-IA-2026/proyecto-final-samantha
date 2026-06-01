@@ -1,15 +1,17 @@
-export const register = async (req, res, next) => {
+import { registerUser, loginUser } from '../../useCases/auth/index.js'
+
+export const registerCtrl = async (req, res, next) => {
   try {
-    const result = await (await import('../../useCases/auth/index.js')).registerUser(req)
+    const result = await registerUser(req)
     res.status(201).json(result)
   } catch (error) {
     next(error)
   }
 }
 
-export const login = async (req, res, next) => {
+export const loginCtrl = async (req, res, next) => {
   try {
-    const result = await (await import('../../useCases/auth/index.js')).loginUser(req)
+    const result = await loginUser(req)
     res.json(result)
   } catch (error) {
     next(error)

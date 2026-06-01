@@ -1,0 +1,28 @@
+info:
+  name: Create Game
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{URL}}/games"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "{{GAME_NAME}}",
+        "category_id": "{{CATEGORY_ID}}",
+        "description": "{{GAME_DESCRIPTION}}",
+        "metacritic_score": {{METACRITIC_SCORE}},
+        "hours_to_complete": {{HOURS_TO_COMPLETE}},
+        "tag_ids": []
+      }
+  auth:
+    type: bearer
+    bearer: "{{TOKEN}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

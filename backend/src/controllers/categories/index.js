@@ -1,55 +1,45 @@
-export const listCategories = async (req, res, next) => {
-  try {
-    const { data, meta } = await (await import('../../useCases/categories/index.js')).listCategories()
-    const { categoryTransformer } = await import('../../transformers/categories/categoryTransformer.js')
+import { listCategories, getCategory, createCategory, updateCategory, deleteCategory } from '../../useCases/categories/index.js'
+import { categoryTransformer } from '../../transformers/categories/categoryTransformer.js'
 
-    res.json({
-      data: data.map(categoryTransformer),
-      meta
-    })
+export const listCategoriesCtrl = async (req, res, next) => {
+  try {
+    const { data, meta } = await listCategories()
+    res.json({ data: data.map(categoryTransformer), meta })
   } catch (error) {
     next(error)
   }
 }
 
-export const getCategory = async (req, res, next) => {
+export const getCategoryCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/categories/index.js')).getCategory(req)
-    const { categoryTransformer } = await import('../../transformers/categories/categoryTransformer.js')
-
+    const { data } = await getCategory(req)
     res.json({ data: categoryTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const createCategory = async (req, res, next) => {
+export const createCategoryCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/categories/index.js')).createCategory(req)
-    const { categoryTransformer } = await import('../../transformers/categories/categoryTransformer.js')
-
+    const { data } = await createCategory(req)
     res.status(201).json({ data: categoryTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const updateCategory = async (req, res, next) => {
+export const updateCategoryCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/categories/index.js')).updateCategory(req)
-    const { categoryTransformer } = await import('../../transformers/categories/categoryTransformer.js')
-
+    const { data } = await updateCategory(req)
     res.json({ data: categoryTransformer(data) })
   } catch (error) {
     next(error)
   }
 }
 
-export const deleteCategory = async (req, res, next) => {
+export const deleteCategoryCtrl = async (req, res, next) => {
   try {
-    const { data } = await (await import('../../useCases/categories/index.js')).deleteCategory(req)
-    const { categoryTransformer } = await import('../../transformers/categories/categoryTransformer.js')
-
+    const { data } = await deleteCategory(req)
     res.json({ data: categoryTransformer(data) })
   } catch (error) {
     next(error)
