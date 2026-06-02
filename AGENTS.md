@@ -1,4 +1,4 @@
-# AGENTS.md — Please, games are needy!
+# AGENTS.md — Needy games!
 
 ## Project Overview
 

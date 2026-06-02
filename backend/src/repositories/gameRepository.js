@@ -16,7 +16,7 @@ const buildWhere = (filters = {}, userId = null) => {
   }
 
   if (filters.search) {
-    where.name = { contains: filters.search, mode: 'insensitive' }
+    where.name = { contains: filters.search }
   }
 
   if (filters.tag) {
@@ -43,7 +43,7 @@ const buildOrderBy = (sort = 'priority') => {
       return { status: 'asc' }
     case 'priority':
     default:
-      return { metacritic_score: 'desc' }
+      return { metacritic_score: 'asc' }
   }
 }
 

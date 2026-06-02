@@ -27,7 +27,7 @@ app.use(bearerToken())
 // Root route — friendly JSON
 app.get('/', (req, res) => {
   res.json({
-    message: 'Please, games are needy! API',
+    message: 'Needy games! API',
     status: 'ok',
     docs: '/api/health'
   })

@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-2">
-          <span class="text-2xl font-pixel text-neon-green text-glow-green">Please, games are needy!</span>
+          <span class="text-2xl font-pixel text-neon-green text-glow-green">Needy games!</span>
         </NuxtLink>
 
         <!-- Desktop Nav -->
@@ -21,7 +21,7 @@
 
           <template v-if="session.isAuthenticated">
             <NuxtLink
-              v-for="item in privateNavItems"
+              v-for="item in visiblePrivateNavItems"
               :key="item.path"
               :to="item.path"
               class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
@@ -80,10 +80,10 @@
         >
           {{ item.label }}
         </NuxtLink>
-        <template v-if="session.isAuthenticated">
-          <NuxtLink
-            v-for="item in privateNavItems"
-            :key="item.path"
+          <template v-if="session.isAuthenticated">
+            <NuxtLink
+              v-for="item in visiblePrivateNavItems"
+              :key="item.path"
             :to="item.path"
             class="block px-4 py-2 rounded-lg text-sm font-medium transition-all"
             :class="$route.path === item.path ? 'text-neon-green bg-neon-green/10' : 'text-gray-300 hover:text-white hover:bg-white/5'"
@@ -114,10 +114,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSessionStore } from '~/stores/useSession'
 
 const session = useSessionStore()
+const $route = useRoute()
 const mobileOpen = ref(false)
 
 const publicNavItems = [
@@ -128,4 +130,8 @@ const privateNavItems = [
   { path: '/juegos', label: 'My Games' },
   { path: '/juegos/nuevo', label: '+ Add Game' }
 ]
+
+const visiblePrivateNavItems = computed(() =>
+  privateNavItems.filter((item) => item.path !== $route.path)
+)
 </script>

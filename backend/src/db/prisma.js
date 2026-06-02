@@ -5,19 +5,41 @@ let prisma = null
 
 export function getPrisma() {
   if (!prisma) {
-    prisma = new PrismaClient()
+    // 1. Creamos la instancia base
+    const basePrisma = new PrismaClient()
 
-    prisma.$use(async (params, next) => {
-      const modelsWithId = ['User', 'Category', 'Tag', 'Game']
-      if (
-        params.action === 'create' &&
-        modelsWithId.includes(params.model) &&
-        params.args.data &&
-        !params.args.data.id
-      ) {
-        params.args.data.id = ulid()
+    // 2. La extendemos y guardamos el resultado en nuestra variable 'prisma'
+    prisma = basePrisma.$extends({
+      query: {
+        $allModels: {
+          async create({ model, args, query }) {
+            const modelsWithId = ['User', 'Category', 'Tag', 'Game']
+            
+            // Si el modelo está en la lista y no viene un ID, lo generamos
+            if (modelsWithId.includes(model) && args.data && !args.data.id) {
+              args.data.id = ulid()
+            }
+            
+            return query(args)
+          },
+          async createMany({ model, args, query }) {
+            const modelsWithId = ['User', 'Category', 'Tag', 'Game']
+            
+            // Añadimos soporte para createMany por si acaso
+            if (modelsWithId.includes(model) && args.data) {
+              if (Array.isArray(args.data)) {
+                args.data.forEach(item => {
+                  if (!item.id) item.id = ulid()
+                })
+              } else if (!args.data.id) {
+                args.data.id = ulid()
+              }
+            }
+            
+            return query(args)
+          }
+        }
       }
-      return next(params)
     })
   }
   return prisma

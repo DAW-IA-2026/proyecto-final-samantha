@@ -1,7 +1,7 @@
 {
   "name": "please-games-are-needy-front",
   "version": "1.0.0",
-  "description": "Frontend for Please, games are needy! - Game backlog manager",
+  "description": "Frontend for Needy games! - Game backlog manager",
   "license": "MIT",
   "type": "module",
   "scripts": {

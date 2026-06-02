@@ -1,4 +1,4 @@
-# Please, games are needy! - API REST Technical Documentation
+# Needy games! - API REST Technical Documentation
 
 ## 1. Users (`users`)
 
